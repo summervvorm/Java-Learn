@@ -1,5 +1,6 @@
 package org.example.springbootstartersample.config;
 
+import jakarta.annotation.PostConstruct;
 import org.example.springbootstartersample.filter.TraceIdFilter;
 import org.example.springbootstartersample.thread.TraceThreadPoolExecutor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -25,7 +26,7 @@ public class TraceAutoConfig {
         return new TraceIdFilter();
     }
 
-    @Bean
+    @Bean("traceThreadPool")
     @ConditionalOnMissingBean
     public TraceThreadPoolExecutor traceThreadPool() {
         return new TraceThreadPoolExecutor(10, 20, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());

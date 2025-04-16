@@ -1,5 +1,7 @@
 package org.example.springbootstartersample.thread;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import java.util.Map;
@@ -12,6 +14,8 @@ import java.util.concurrent.*;
  * @Created by raolongxiang
  */
 public class TraceThreadPoolExecutor extends ThreadPoolExecutor {
+    private static final Logger log = LoggerFactory.getLogger(TraceThreadPoolExecutor.class);
+
     public TraceThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue);
     }
@@ -33,6 +37,7 @@ public class TraceThreadPoolExecutor extends ThreadPoolExecutor {
     public void execute(Runnable task) {
         Map<String, String> context = MDC.getCopyOfContextMap();
         super.execute(() -> {
+            log.info("traceId:{}", MDC.get("traceId"));
             MDC.setContextMap(context);
             task.run();
         });
