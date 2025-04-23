@@ -1,8 +1,11 @@
 package org.example.springbootstartersample.config;
 
-import jakarta.annotation.PostConstruct;
+
+import org.example.springbootstartersample.aspect.TraceLogAspect;
 import org.example.springbootstartersample.filter.TraceIdFilter;
 import org.example.springbootstartersample.thread.TraceThreadPoolExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
@@ -21,11 +24,16 @@ import java.util.concurrent.TimeUnit;
 @ConditionalOnWebApplication
 @EnableAspectJAutoProxy
 public class TraceAutoConfig {
+    private final Logger log =  LoggerFactory.getLogger(TraceAutoConfig.class);
     @Bean
     public TraceIdFilter traceIdFilter() {
         return new TraceIdFilter();
     }
-
+    @Bean
+    public TraceLogAspect traceLogAspect() {
+        log.info("Initializing TraceLogAspect");
+        return new TraceLogAspect();
+    }
     @Bean("traceThreadPool")
     @ConditionalOnMissingBean
     public TraceThreadPoolExecutor traceThreadPool() {
